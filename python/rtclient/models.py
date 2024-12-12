@@ -14,7 +14,7 @@ from pydantic import (
 
 from rtclient.util.model_helpers import ModelWithDefaults
 
-Voice = Literal["alloy", "shimmer", "echo"]
+Voice = Literal["alloy", "ash", "ballad", "coral", "echo", "sage", "shimmer", "verse"]
 AudioFormat = Literal["pcm16", "g711-ulaw", "g711-alaw"]
 Modality = Literal["text", "audio"]
 
@@ -364,17 +364,18 @@ ResponseItemContentPart = Annotated[
 
 class ResponseItemBase(BaseModel):
     id: Optional[str]
-    status: ResponseItemStatus
 
 
 class ResponseMessageItem(ResponseItemBase):
     type: MessageItemType = "message"
+    status: ResponseItemStatus
     role: MessageRole
     content: list[ResponseItemContentPart]
 
 
 class ResponseFunctionCallItem(ResponseItemBase):
     type: Literal["function_call"] = "function_call"
+    status: ResponseItemStatus
     name: str
     call_id: str
     arguments: str
@@ -452,10 +453,23 @@ ResponseStatusDetails = Annotated[
 ]
 
 
+class InputTokenDetails(BaseModel):
+    cached_tokens: int
+    text_tokens: int
+    audio_tokens: int
+
+
+class OutputTokenDetails(BaseModel):
+    text_tokens: int
+    audio_tokens: int
+
+
 class Usage(BaseModel):
     total_tokens: int
     input_tokens: int
     output_tokens: int
+    input_token_details: InputTokenDetails
+    output_token_details: OutputTokenDetails
 
 
 class Response(BaseModel):
