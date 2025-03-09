@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "rt-client": "file:rt-client-0.4.7.tgz"
+  }
+}
